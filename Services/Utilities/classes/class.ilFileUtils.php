@@ -398,11 +398,12 @@ class ilFileUtils
 
 
 	/**
-	*	decodes base encoded file row by row to prevent memory exhaust
-	* @param string $filename	name of file to read
-	* @param string $fileout name where to put decoded file
-	*/
-	function fastBase64Decode ($filein, $fileout)
+	 *    decodes base encoded file row by row to prevent memory exhaust
+	 * @param string $filename name of file to read
+	 * @param string $fileout name where to put decoded file
+	 * @return bool
+	 */
+	public static function fastBase64Decode ($filein, $fileout)
 	{
 		$fh = fopen($filein, 'rb');
 		$fh2= fopen($fileout, 'wb');
@@ -676,6 +677,7 @@ class ilFileUtils
 			'm',     // MATLAB
 			'mat',   // MATLAB
 			'md',    // TEXT__MARKDOWN,
+			'mdl',				// Vensim files
 			'mdown',    // TEXT__MARKDOWN,
 			'mid',   // AUDIO__MIDI,
 			'min',		// scorm articulate?
@@ -779,6 +781,7 @@ class ilFileUtils
 			'swa', // scorm wbts
 			'swf',   // APPLICATION__X_SHOCKWAVE_FLASH,
 			'swz', // scorm wbts
+			'tar',				// application/x-tar
 			'tex',   // APPLICATION__X_TEX,
 			'texi',   // APPLICATION__X_TEXINFO,
 			'texinfo',   // APPLICATION__X_TEXINFO,
