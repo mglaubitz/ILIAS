@@ -782,10 +782,9 @@ class ilObjMediaObject extends ilObject
 					}
 					else
 					{
-						$location = $item->getLocation();
+						$location = ilUtil::secureUrl($item->getLocation());
 					}
 
-					// Location
 					$xml.= "<Location Type=\"".$item->getLocationType()."\">".
 						$this->handleAmps($location)."</Location>";
 
@@ -1570,8 +1569,8 @@ class ilObjMediaObject extends ilObject
 		$lng = $DIC->language();
 		
 		// determine width and height of known image types
-		$width = 640;
-		$height = 360;
+		//$width = 640;
+		//$height = 360;
 		$info = "";
 		
 		if ($a_format == "audio/mpeg")
@@ -2008,6 +2007,12 @@ class ilObjMediaObject extends ilObject
 	 */
 	function uploadVideoPreviewPic($a_prevpic)
 	{
+		// remove old one
+		if ($this->getVideoPreviewPic(true) != "")
+		{
+			$this->removeAdditionalFile($this->getVideoPreviewPic(true));
+		}
+
 		$pi = pathinfo($a_prevpic["name"]);
 		$ext = $pi["extension"];
 		if (in_array($ext, array("jpg", "jpeg", "png")))

@@ -3379,8 +3379,12 @@ class ilObjContentObject extends ilObject
 			$style_obj = ilObjectFactory::getInstanceByObjId($style_id);
 			$new_id = $style_obj->ilClone();
 			$new_obj->setStyleSheetId($new_id);
-			$new_obj->update();
 		}
+		else	// or just set the same standard style
+		{
+			$new_obj->setStyleSheetId($style_id);
+		}
+		$new_obj->update();
 		
 		// copy content
 		$copied_nodes = $this->copyAllPagesAndChapters($new_obj, $a_copy_id);
@@ -3406,6 +3410,30 @@ class ilObjContentObject extends ilObject
 		include_once("./Services/Object/classes/class.ilObjectTranslation.php");
 		$ot = ilObjectTranslation::getInstance($this->getId());
 		$ot->copy($new_obj->getId());
+
+		// copy lm menu
+		include_once './Modules/LearningModule/classes/class.ilLMMenuEditor.php';
+		$menu = new ilLMMenuEditor();
+		$menu->setObjId($this->getId());
+		$new_menu = new ilLMMenuEditor();
+		$new_menu->setObjId($new_obj->getId());
+		foreach ($menu->getMenuEntries() as $entry)
+		{
+			/*'id'		=> $row->id,
+							   'title'	=> $row->title,
+							   'link'	=> $row->target,
+							   'type'	=> $row->link_type,
+							   'ref_id'	=> $row->link_ref_id,
+							   'active'*/
+
+			$new_menu->setTarget($entry["link"]);
+			$new_menu->setTitle($entry["title"]);
+			$new_menu->setLinkType($entry["type"]);
+			$new_menu->setLinkRefId($entry["ref_id"]);
+			$new_menu->create();
+			ilLMMenuEditor::writeActive($new_menu->getEntryId(), $entry["active"] == "y" ? true : false);
+		}
+
 
 		return $new_obj;
 	}
@@ -3494,11 +3522,11 @@ class ilObjContentObject extends ilObject
 	 * @param
 	 * @return
 	 */
-	function autoLinkGlossaryTerms($a_glo_id)
+	function autoLinkGlossaryTerms($a_glo_ref_id)
 	{
 		// get terms
 		include_once("./Modules/Glossary/classes/class.ilGlossaryTerm.php");
-		$terms = ilGlossaryTerm::getTermList($a_glo_id);
+		$terms = ilGlossaryTerm::getTermList($a_glo_ref_id);
 
 		// each get page: get content
 		include_once("./Modules/LearningModule/classes/class.ilLMPage.php");

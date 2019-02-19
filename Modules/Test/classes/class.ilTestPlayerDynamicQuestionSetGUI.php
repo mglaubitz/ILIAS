@@ -423,6 +423,10 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 
 			$this->ctrl->setParameter($this, 'pmode', ilTestPlayerAbstractGUI::PRESENTATION_MODE_VIEW);
 		}
+		else
+		{
+			$this->ctrl->redirect($this, ilTestPlayerCommands::SHOW_QUESTION);
+		}
 
 // fau: testNav - remember to prevent the navigation confirmation
 		$this->saveNavigationPreventConfirmation();
@@ -499,9 +503,13 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 			return;
 		}
 		
-		if( $this->getQuestionIdParameter() )
+		if( $this->testSequence->getQuestionSet()->getSelectionQuestionList()->isInList($this->getQuestionIdParameter()) )
 		{
 			$this->testSession->setCurrentQuestionId($this->getQuestionIdParameter());
+		}
+		else
+		{
+			$this->resetQuestionIdParameter();
 		}
 		
 		if( !$this->testSession->getCurrentQuestionId() )
@@ -620,13 +628,14 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 					$questionGui, true
 				);
 // fau.
+				$this->testSession->getQuestionSetFilterSelection()->setForcedQuestionIds(array());
 			}
 
 // fau: testNav - add feedback modal
-			if (!empty($_SESSION['forced_feedback_navigation_url']))
+			if ($this->isForcedFeedbackNavUrlRegistered())
 			{
-				$this->populateInstantResponseModal($questionGui, $_SESSION['forced_feedback_navigation_url']);
-				unset($_SESSION['forced_feedback_navigation_url']);
+				$this->populateInstantResponseModal($questionGui, $this->getRegisteredForcedFeedbackNavUrl());
+				$this->unregisterForcedFeedbackNavUrl();
 			}
 // fau.
 		}
@@ -658,20 +667,16 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 
 		if( !$this->isParticipantsAnswerFixed($questionId) )
 		{
-// fau: testNav - handle answer fixation and intermediate submit
-			// always save the question when feedback is requested
-			// if( $this->object->isInstantFeedbackAnswerFixationEnabled() )
-			if (true)
+			if( $this->saveQuestionSolution(true) )
 			{
-				$this->saveQuestionSolution(true);
 				$this->removeIntermediateSolution();
+				$this->persistQuestionAnswerStatus();
 				$this->setAnswerChangedParameter(false);
 			}
 			else
 			{
-				$this->handleIntermediateSubmit();
+				$this->ctrl->redirect($this, ilTestPlayerCommands::SHOW_QUESTION);
 			}
-// fau.
 			$this->testSequence->unsetQuestionPostponed($questionId);
 			$this->testSequence->setQuestionChecked($questionId);
 			$this->testSequence->saveToDb();
@@ -687,7 +692,7 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		if ($this->getNavigationUrlParameter())
 		{
 			$this->saveNavigationPreventConfirmation();
-			$_SESSION['forced_feedback_navigation_url'] = $this->getNavigationUrlParameter();
+			$this->registerForcedFeedbackNavUrl($this->getNavigationUrlParameter());
 		}
 // fau.
 		$this->ctrl->redirect($this, ilTestPlayerCommands::SHOW_QUESTION);
@@ -1022,6 +1027,11 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		$this->ctrl->setParameterByClass('ilTestEvaluationGUI', 'pass', $this->testSession->getPass());
 
 		return $this->ctrl->getLinkTargetByClass('ilTestEvaluationGUI', 'confirmDeletePass');
+	}
+	
+	protected function resetQuestionIdParameter()
+	{
+		$this->resetSequenceElementParameter();
 	}
 	
 	protected function getQuestionIdParameter()

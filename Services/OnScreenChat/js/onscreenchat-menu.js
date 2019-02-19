@@ -7,6 +7,7 @@
 		conversations: [],
 		messageFormatter: {},
 		participantsImages: {},
+		participantsNames: {},
 
 		setConfig: function(config) {
 			$scope.il.OnScreenChatMenu.config = config;
@@ -79,7 +80,13 @@
 
 					for (var key in participants) {
 						if(participants.hasOwnProperty(key) && participants[key].id != getModule().config.userId) {
-							participantNames.push(participants[key].name);
+							var publicName = getPublicName(participants[key].id);
+							if (publicName !== "") {
+								participantNames.push(publicName);
+							} else {
+								participantNames.push(participants[key].name);
+							}
+
 							participantUserIds.push(participants[key].id);
 						}
 					}
@@ -144,14 +151,16 @@
 				}
 
 				getModule().content.find('#onscreenchatmenu-content').html(templates);
+
 				il.ExtLink.autolink($('#onscreenchatmenu-content').find('[data-onscreenchat-body-last-msg]'));
+
 				getModule().rendered = true;
 			}
 
 			return getModule().content.html();
 		},
 
-		add: function(conversation) {
+		addOrUpdate: function(conversation) {
 			var index = getModule().hasConversation(conversation);
 			if (index === false) {
 				getModule().conversations.push(conversation);
@@ -175,7 +184,7 @@
 
 		updateBadges: function() {
 			var conversations = getModule().conversations.filter(function(conversation){
-				return conversation.latestMessage != null && (conversation.open === false || conversation.open == undefined);
+				return conversation.latestMessage != null && (conversation.open === false || conversation.open === undefined);
 			});
 			var numConversations = conversations.length;
 			var numMessages = getModule().countUnreadMessages();
@@ -184,14 +193,14 @@
 			var conversationsBadge = $('[data-onscreenchat-header-menu] .il-counter-status');
 
 			conversationsBadge.html(numConversations);
-			if (numConversations == 0) {
+			if (numConversations === 0) {
 				conversationsBadge.addClass('iosOnScreenChatHidden').removeClass('iosOnScreenChatShown');
 			} else {
 				conversationsBadge.removeClass('iosOnScreenChatHidden').addClass('iosOnScreenChatShown');
 			}
 
 			messagesBadge.html(numMessages);
-			if(numMessages == 0) {
+			if(numMessages === 0) {
 				messagesBadge.addClass('iosOnScreenChatHidden').removeClass('iosOnScreenChatShown');
 			} else {
 				messagesBadge.removeClass('iosOnScreenChatHidden').addClass('iosOnScreenChatShown');
@@ -200,6 +209,10 @@
 
 		syncProfileImages: function(images) {
 			getModule().participantsImages = images;
+		},
+
+		syncPublicNames: function(names) {
+			getModule().participantsNames = names;
 		},
 
 		countUnreadMessages: function() {
@@ -217,6 +230,11 @@
 
 		afterListUpdate: function() {
 			$('.ilOnScreenChatMenuLoader').remove();
+
+			$('#onscreenchatmenu-content').find('[data-toggle="tooltip"]').tooltip({
+				container: 'body',
+				viewport: { selector: 'body', padding: 10 }
+			});
 		},
 
 		hasConversation: function(conversation) {
@@ -234,6 +252,14 @@
 		if (getModule().participantsImages.hasOwnProperty(userId)) {
 			return getModule().participantsImages[userId].src;
 		}
+		return "";
+	};
+
+	var getPublicName = function(userId) {
+		if (getModule().participantsNames.hasOwnProperty(userId)) {
+			return getModule().participantsNames[userId];
+		}
+
 		return "";
 	};
 

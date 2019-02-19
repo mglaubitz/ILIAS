@@ -1,6 +1,8 @@
 <?php
 /* Copyright (c) 1998-2010 ILIAS open source, Extended GPL, see docs/LICENSE */
 
+use ILIAS\Filesystem\Security\Sanitizing\FilenameSanitizer;
+
 require_once "./Services/Object/classes/class.ilObjectGUI.php";
 require_once "./Services/Container/classes/class.ilContainer.php";
 include_once './Services/PersonalDesktop/interfaces/interface.ilDesktopItemHandling.php';
@@ -696,8 +698,10 @@ class ilContainerGUI extends ilObjectGUI implements ilDesktopItemHandling
 						}
 						else
 						{
-							$GLOBALS['tpl']->addJavaScript("Services/BackgroundTask/js/BgTask.js");		
+							$url =  $this->ctrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjfoldergui", "ilbackgroundtaskhub"), "", "", true, false);
+							$GLOBALS['tpl']->addJavaScript("Services/BackgroundTask/js/BgTask.js");
 							$GLOBALS['tpl']->addOnLoadCode("il.BgTask.initMultiForm('ilFolderDownloadBackgroundTaskHandler');");
+							$GLOBALS['tpl']->addOnLoadCode('il.BgTask.setAjax("'.$url.'");');
 							
 							include_once "Services/UIComponent/Button/classes/class.ilSubmitButton.php";
 							$button = ilSubmitButton::getInstance();
@@ -783,27 +787,41 @@ class ilContainerGUI extends ilObjectGUI implements ilDesktopItemHandling
 					}
 				}
 			}
+			// bugfix mantis 24559
+			// undoing an erroneous change inside mantis 23516 by adding "Download Multiple Objects"-functionality for non-admins
+			// as they don't have the possibility to use the multi-download-capability of the manage-tab
 			else if ($this->isMultiDownloadEnabled())
 			{
-				// #11843
-				$GLOBALS['tpl']->setPageFormAction($this->ctrl->getFormAction($this));						
+				// bugfix mantis 0021272
+				$ref_id = $_GET['ref_id'];
+				$num_files = $this->tree->getChildsByType($ref_id, "file");
+				$num_folders = $this->tree->getChildsByType($ref_id, "fold");
+				if(count($num_files) > 0 OR count($num_folders) > 0)
+				{
+					// #11843
+					$GLOBALS['tpl']->setPageFormAction($this->ctrl->getFormAction($this));
 
-				include_once './Services/UIComponent/Toolbar/classes/class.ilToolbarGUI.php';
-				$toolbar = new ilToolbarGUI();
-				$this->ctrl->setParameter($this, "type", "");
-				$this->ctrl->setParameter($this, "item_ref_id", "");
+					include_once './Services/UIComponent/Toolbar/classes/class.ilToolbarGUI.php';
+					$toolbar = new ilToolbarGUI();
+					$this->ctrl->setParameter($this, "type", "");
+					$this->ctrl->setParameter($this, "item_ref_id", "");
 
-				$toolbar->addFormButton(
-					$this->lng->txt('download_selected_items'),
-					'download'
-				);
+					$toolbar->addFormButton(
+						$this->lng->txt('download_selected_items'),
+						'download'
+					);
 
-				$GLOBALS['tpl']->addAdminPanelToolbar(
-					$toolbar,
-					$this->object->gotItems() ? true : false,
-					$this->object->gotItems() ? true : false
-				);
-			}		
+					$GLOBALS['tpl']->addAdminPanelToolbar(
+						$toolbar,
+						$this->object->gotItems() ? true : false,
+						$this->object->gotItems() ? true : false
+					);
+				}
+				else
+				{
+					ilUtil::sendInfo($this->lng->txt('msg_no_downloadable_objects'), true);
+				}
+			}
 		}
 	}
 
@@ -1455,13 +1473,16 @@ class ilContainerGUI extends ilObjectGUI implements ilDesktopItemHandling
 	 	ilUtil::sendSuccess($lng->txt("removed_from_desktop"));
 		$this->renderObject();
     }
-	
+
+	// bugfix mantis 24559
+	// undoing an erroneous change inside mantis 23516 by adding "Download Multiple Objects"-functionality for non-admins
+	// as they don't have the possibility to use the multi-download-capability of the manage-tab
 	function enableMultiDownloadObject()
 	{
 		$this->multi_download_enabled = true;
 		$this->renderObject();
 	}
-	
+
 	function isMultiDownloadEnabled()
 	{
 		return $this->multi_download_enabled;
@@ -1821,6 +1842,7 @@ class ilContainerGUI extends ilObjectGUI implements ilDesktopItemHandling
 		
 		// copy to temporary directory
 		$oldFilename = ilObjFile::_lookupAbsolutePath($obj_id);
+
 		if (!copy($oldFilename, $newFilename))
 			throw new ilFileException("Could not copy ".$oldFilename." to ".$newFilename);
 		

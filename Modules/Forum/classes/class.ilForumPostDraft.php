@@ -401,19 +401,20 @@ class ilForumPostDraft
 	/**
 	 * @param $user_id
 	 * @param $thread_id
-	 * @return mixed
+	 * @return \ilForumPostDraft[]
 	 */
-	public static function getInstancesByUserIdAndThreadId($user_id, $thread_id)
+	public static function getInstancesByUserIdAndThreadId($user_id, $thread_id) 
 	{
 		if(!self::$instances[$user_id])
 		{
 			self::readDrafts($user_id);
 		}
 
-		if(self::$instances[$user_id][$thread_id])
-		{
+		if (isset(self::$instances[$user_id][$thread_id])) {
 			return self::$instances[$user_id][$thread_id]; 
 		}
+
+		return [];
 	}
 
 	/**
@@ -528,6 +529,30 @@ class ilForumPostDraft
 				$mob_obj->delete();
 			}
 		}
+	}
+
+	/**
+	 * @param array $post_ids
+	 */
+	public function deleteDraftsByPostIds(array $post_ids = array())
+	{
+		$draft_ids = array();
+		$res = $this->db->query('SELECT draft_id FROM frm_posts_drafts WHERE '. $this->db->in('post_id', $post_ids, false, 'integer'));
+		while($row = $this->db->fetchAssoc($res))
+		{
+			$draft_ids[] = $row['draft_id'];
+		}	
+		
+		foreach($draft_ids as $draft_id)
+		{
+			self::deleteMobsOfDraft($draft_id);
+
+			// delete attachments of draft 
+			$objFileDataForumDrafts = new ilFileDataForumDrafts(0, $draft_id);
+			$objFileDataForumDrafts->delete();
+		}
+		$this->db->manipulate('DELETE FROM frm_drafts_history WHERE ' . $this->db->in('draft_id', $draft_ids, false, 'integer'));
+		$this->db->manipulate('DELETE FROM frm_posts_drafts WHERE ' . $this->db->in('draft_id', $draft_ids, false, 'integer'));
 	}
 	
 	/**

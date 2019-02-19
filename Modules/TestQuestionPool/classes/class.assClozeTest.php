@@ -1299,7 +1299,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 				continue;
 			}
 			
-			if( !$this->isValidNumericSubmitValue($value) )
+			if( strlen($value) && !$this->isValidNumericSubmitValue($value) )
 			{
 				ilUtil::sendFailure($this->lng->txt("err_no_numeric_value"), true);
 				return false;
@@ -1309,11 +1309,11 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		return true;
 	}
 	
-	public function getSolutionSubmit()
+	public function fetchSolutionSubmit($submit)
 	{
 		$solutionSubmit = array();
 		
-		foreach ($_POST as $key => $value)
+		foreach ($submit as $key => $value)
 		{
 			if (preg_match("/^gap_(\d+)/", $key, $matches))
 			{
@@ -1337,6 +1337,12 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		}
 		
 		return $solutionSubmit;
+		
+	}
+	
+	public function getSolutionSubmit()
+	{
+		return $this->fetchSolutionSubmit($_POST);
 	}
 	
 	/**
@@ -1600,15 +1606,23 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 			{
 				if ($gap_index == $solutionvalue["value1"])
 				{
-					switch ($gap->getType())
-					{
-						case CLOZE_SELECT:
-							$worksheet->setCell($startrow + $i, 1, $gap->getItem($solutionvalue["value2"])->getAnswertext());
-							break;
-						case CLOZE_NUMERIC:
-						case CLOZE_TEXT:
-							$worksheet->setCell($startrow + $i, 1, $solutionvalue["value2"]);
-							break;
+					$string_escaping_org_value = $worksheet->getStringEscaping();
+					try {
+						$worksheet->setStringEscaping(false);
+
+						switch ($gap->getType())
+						{
+							case CLOZE_SELECT:
+								$worksheet->setCell($startrow + $i, 1, $gap->getItem($solutionvalue["value2"])->getAnswertext());
+								break;
+							case CLOZE_NUMERIC:
+							case CLOZE_TEXT:
+								$worksheet->setCell($startrow + $i, 1, $solutionvalue["value2"]);
+								break;
+						}
+
+					} finally {
+						$worksheet->setStringEscaping($string_escaping_org_value);
 					}
 				}
 			}
@@ -2012,6 +2026,9 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 			$userSolution[] = array('gap_id' => $key, 'value' => $val);
 		}
 		
-		return $this->calculateReachedPointsForSolution($userSolution);
+		$reachedPoints = $this->calculateReachedPointsForSolution($userSolution);
+		$reachedPoints = $this->deductHintPointsFromReachedPoints($previewSession, $reachedPoints);
+		
+		return $this->ensureNonNegativePoints($reachedPoints);
 	}
 }

@@ -126,10 +126,12 @@ class ilLearningModuleImporter extends ilXmlImporter
 
 		include_once("./Modules/LearningModule/classes/class.ilLMPage.php");
 		include_once("./Modules/LearningModule/classes/class.ilLMPageObject.php");
+		$this->log->debug("pg map entries: ".count($pg_map));
 		foreach ($pg_map as $pg_id)
 		{
 			$lm_id = ilLMPageObject::_lookupContObjID($pg_id);
 			ilLMPage::_writeParentId("lm", $pg_id, $lm_id);
+			$this->log->debug("write parent id, pg id: ".$pg_id.", lm id: ".$lm_id);
 		}
 
 		// header footer page
@@ -200,6 +202,14 @@ class ilLearningModuleImporter extends ilXmlImporter
 				$lm = new ilObjLearningModule($new_lm_id, false);
 				$lm->writeStyleSheetId($new_style_id);
 			}
+		}
+
+		// menu item ref ids
+		$ref_mapping = $a_mapping->getMappingsOfEntity('Services/Container', 'refs');
+		$lm_map = $a_mapping->getMappingsOfEntity("Modules/LearningModule", "lm");
+		foreach ($lm_map as $old_lm_id => $new_lm_id)
+		{
+			ilLMMenuEditor::fixImportMenuItems($new_lm_id, $ref_mapping);
 		}
 	}
 }
