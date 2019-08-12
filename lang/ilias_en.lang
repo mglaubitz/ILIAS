@@ -645,7 +645,7 @@ assessment#:#ass_lac_expression#:#Expression
 assessment#:#ass_lac_unable_to_parse_condition#:#The condition "%s" can not be validated.
 assessment#:#tst_skill_triggerings_num_req_answers#:#Required Amount of Answers for Competence Triggers
 assessment#:#tst_skill_triggerings_num_req_answers_desc#:#Competences aren't triggered before this amount of answered questions contributes to the competence level calculation.
-assessment#:#tst_skill_triggerings_num_req_answers_not_reached_warn#:#At least one of the competences addressed by this test is not triggered by the minimal required amount of questions.<br />The required amount of questions: %s
+assessment#:#tst_skill_triggerings_num_req_answers_not_reached_warn#:#At least one of the competences addressed by this test is not triggered by the minimal required amount of questions. No competence records will be written for these competences.<br />The required amount of questions: %s
 assessment#:#export_essay_qst_with_html#:#Export Essay Question with HTML code
 assessment#:#export_essay_qst_with_html_desc#:#If activated it is possible to export Essay Question with HTML to Excel.
 assessment#:#qpl_qst_skl_usg_skill_col#:#Competence
@@ -5610,10 +5610,10 @@ mail#:#mail_notification_subject#:#New mail in your inbox
 mail#:#mail_options_saved#:#Options saved
 mail#:#mail_s#:#Mail(s)
 mail#:#mail_salutation_anonymous#:#Hello
-mail#:#mail_salutation_f#:#Hello
+mail#:#mail_salutation_f#:#Dear Mrs.
 mail#:#mail_salutation_female#:#Output for placeholder [MAIL_SALUTATION], if salutation is 'Ms.'
 mail#:#mail_salutation_general#:#Output for placeholder [MAIL_SALUTATION], if no salutation is desired or specified
-mail#:#mail_salutation_m#:#Hello
+mail#:#mail_salutation_m#:#Dear Mr.
 mail#:#mail_salutation_male#:#Output for placeholder [MAIL_SALUTATION], if salutation is 'Mr.'
 mail#:#mail_salutation_n#:#Hello
 mail#:#mail_saved#:#The message has been saved
@@ -11529,7 +11529,7 @@ rbac#:#il_orgu_employee#:#Organisational Unit Employee
 rbac#:#il_orgu_superior#:#Organisational Unit Superior
 obj#:#obj_tool_setting_info_tab_info#:#The ‘Info’ tab will be displayed.
 common#:#obj_tool_setting_news_info#:#The ‘News’ block will be displayed inside the ‘Content’ tab.
-common#:#obj_tool_setting_calendar_info#:#The ‘Calendar’ block will be displayed inside the ‘Content’ tab.
+common#:#obj_tool_setting_calendar_info#:#A calendar is available and the ‘Calendar’ block is displayed in the ‘Contents’ tab.
 obj#:#obj_presentation#:#Presentation
 mcst#:#mcst_webfeed#:#RSS Web Feed
 news#:#news_news_item_def_visibility_users_info#:#Only authenticated users have access to current news.
@@ -14245,3 +14245,5 @@ user#:#msg_spoint_not_modified#:#Starting point not modified
 lti#:#lti_cron_title#:#LTI Outcome Service
 lti#:#lti_cron_title_desc#:#Synchronizes the learning progress of LTI users with the LTI consumer, if it supports the outcome service. This cron job is only required to transfer status updates after Learning progress settings updates.
 dateplaner#:#cal_usr_info#:#Appointment Information
+content#:#msg_no_page_access#:#You do not have the permission to access this page.
+forum#:#frm_move_invalid_file_type#:#The thread "%s" has an unsupported file type attached. Remove the file or contact the administrator of the system to add this file type to the file type whitelist.

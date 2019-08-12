@@ -1873,7 +1873,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		// subject
 		$oSubjectGUI = new ilTextInputGUI($this->lng->txt('forums_subject'), 'subject');
-		$oSubjectGUI->setMaxLength(64);
+		$oSubjectGUI->setMaxLength(255);
 		$oSubjectGUI->setRequired(true);
 
 		if($this->objProperties->getSubjectSetting() == 'empty_subject')
@@ -3660,10 +3660,19 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 		});
 
 		if (isset($_POST['frm_ref_id']) && (int)$_POST['frm_ref_id']) {
-			$this->object->Forum->moveThreads(
-				$threads, $this->object->getRefId(),
-				$this->ilObjDataCache->lookupObjId((int)$_POST['frm_ref_id'])
-			);
+            $errorMessages = $this->object->Forum->moveThreads(
+                (array) $_SESSION['threads2move'],
+                $this->object->getRefId(),
+                $this->ilObjDataCache->lookupObjId($_POST['frm_ref_id'])
+            );
+
+            if (array() !== $errorMessages) {
+                \ilUtil::sendFailure(
+                    implode("<br><br>", $errorMessages),
+                    true
+                );
+                return $this->ctrl->redirectByClass('ilObjForumGUI', 'showThreads');
+            }
 
 			unset($_SESSION['threads2move']);
 			ilUtil::sendInfo($this->lng->txt('threads_moved_successfully'), true);
