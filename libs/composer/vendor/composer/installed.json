@@ -30,7 +30,8 @@
             "MIT"
         ],
         "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
-        "homepage": "https://github.com/container-interop/container-interop"
+        "homepage": "https://github.com/container-interop/container-interop",
+        "abandoned": "psr/container"
     },
     {
         "name": "cweagans/composer-patches",
@@ -131,6 +132,49 @@
             "psr-7",
             "psr7"
         ]
+    },
+    {
+        "name": "enshrined/svg-sanitize",
+        "version": "0.13.3",
+        "version_normalized": "0.13.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/darylldoyle/svg-sanitizer.git",
+            "reference": "bc66593f255b7d2613d8f22041180036979b6403"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/darylldoyle/svg-sanitizer/zipball/bc66593f255b7d2613d8f22041180036979b6403",
+            "reference": "bc66593f255b7d2613d8f22041180036979b6403",
+            "shasum": ""
+        },
+        "require": {
+            "ext-dom": "*",
+            "ext-libxml": "*"
+        },
+        "require-dev": {
+            "codeclimate/php-test-reporter": "^0.1.2",
+            "phpunit/phpunit": "^6"
+        },
+        "time": "2020-01-20T01:34:17+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "enshrined\\svgSanitize\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-2.0-or-later"
+        ],
+        "authors": [
+            {
+                "name": "Daryll Doyle",
+                "email": "daryll@enshrined.co.uk"
+            }
+        ],
+        "description": "An SVG sanitizer for PHP"
     },
     {
         "name": "ezyang/htmlpurifier",
@@ -292,12 +336,12 @@
         "version_normalized": "3.6.1.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/oscarotero/Gettext.git",
+            "url": "https://github.com/php-gettext/Gettext.git",
             "reference": "cd3be64443551e3a693117c4bccbe53e36282456"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/oscarotero/Gettext/zipball/cd3be64443551e3a693117c4bccbe53e36282456",
+            "url": "https://api.github.com/repos/php-gettext/Gettext/zipball/cd3be64443551e3a693117c4bccbe53e36282456",
             "reference": "cd3be64443551e3a693117c4bccbe53e36282456",
             "shasum": ""
         },
@@ -354,12 +398,12 @@
         "version_normalized": "2.3.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/mlocati/cldr-to-gettext-plural-rules.git",
+            "url": "https://github.com/php-gettext/Languages.git",
             "reference": "49c39e51569963cc917a924b489e7025bfb9d8c7"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/mlocati/cldr-to-gettext-plural-rules/zipball/49c39e51569963cc917a924b489e7025bfb9d8c7",
+            "url": "https://api.github.com/repos/php-gettext/Languages/zipball/49c39e51569963cc917a924b489e7025bfb9d8c7",
             "reference": "49c39e51569963cc917a924b489e7025bfb9d8c7",
             "shasum": ""
         },
@@ -564,7 +608,8 @@
             "internationalization",
             "translation",
             "twig"
-        ]
+        ],
+        "abandoned": "simplesamlphp/twig-configurable-i18n"
     },
     {
         "name": "james-heinrich/getid3",
@@ -1205,26 +1250,24 @@
     },
     {
         "name": "robrichards/xmlseclibs",
-        "version": "3.0.1",
-        "version_normalized": "3.0.1.0",
+        "version": "3.0.4",
+        "version_normalized": "3.0.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/robrichards/xmlseclibs.git",
-            "reference": "d937712f70f93a584eb0299ccd87dc6374003781"
+            "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/d937712f70f93a584eb0299ccd87dc6374003781",
-            "reference": "d937712f70f93a584eb0299ccd87dc6374003781",
+            "url": "https://api.github.com/repos/robrichards/xmlseclibs/zipball/0a53d3c3aa87564910cae4ed01416441d3ae0db5",
+            "reference": "0a53d3c3aa87564910cae4ed01416441d3ae0db5",
             "shasum": ""
         },
         "require": {
+            "ext-openssl": "*",
             "php": ">= 5.4"
         },
-        "suggest": {
-            "ext-openssl": "OpenSSL extension"
-        },
-        "time": "2017-08-31T09:27:07+00:00",
+        "time": "2019-11-05T11:44:22+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
