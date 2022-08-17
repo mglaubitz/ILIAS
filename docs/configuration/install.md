@@ -124,6 +124,7 @@ The ILIAS Testserver (https://test7.ilias.de) is currently configured as follows
 | wkhtmltopdf    | 0.12.6                      |
 | Ghostscript    | 9.50                        |
 | Imagemagick    | 6.9.10-23 Q16               |
+| MathJax        | 2.7.9                       |
 
 
 <a name="other-platforms"></a>
@@ -209,7 +210,7 @@ systemctl restart httpd.service
 ### PHP Installation and Configuration
 
 Refer to the to documentation of your installation to install either PHP 7.3 to
-PHP 7.4 including packages for gd, mysq, mbstring, curl, dom, zip and xml.
+PHP 7.4 including packages for gd, mysql, mbstring, curl, dom, zip and xml.
 
 To check if the installation was successfull create the file `/var/www/html/phpinfo.php`
 with the following contents:

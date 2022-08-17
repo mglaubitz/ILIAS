@@ -65,21 +65,21 @@ class ilCmiXapiScoringGUI
         }
     }
 
-    protected function resetFilterCmd()
-    {
-        $table = $this->buildTableGUI();
-        $table->resetFilter();
-        $table->resetOffset();
-        $this->showCmd();
-    }
-
-    protected function applyFilterCmd()
-    {
-        $table = $this->buildTableGUI();
-        $table->writeFilterToSession();
-        $table->resetOffset();
-        $this->showCmd();
-    }
+//    protected function resetFilterCmd()
+//    {
+//        $table = $this->buildTableGUI("");
+//        $table->resetFilter();
+//        $table->resetOffset();
+//        $this->showCmd();
+//    }
+//
+//    protected function applyFilterCmd()
+//    {
+//        $table = $this->buildTableGUI("");
+//        $table->writeFilterToSession();
+//        $table->resetOffset();
+//        $this->showCmd();
+//    }
 
     protected function showCmd()
     {
@@ -112,7 +112,7 @@ class ilCmiXapiScoringGUI
         $filter->setActivityId($this->object->getActivityId());
     
         $linkBuilder = new ilCmiXapiHighscoreReportLinkBuilder(
-            $this->object->getId(),
+            $this->object,
             $this->object->getLrsType()->getLrsEndpointStatementsAggregationLink(),
             $filter
         );
@@ -122,7 +122,7 @@ class ilCmiXapiScoringGUI
             $linkBuilder
         );
 
-        $scoringReport = $request->queryReport($this->object->getId());
+        $scoringReport = $request->queryReport($this->object);
         if (true === $scoringReport->initTableData()) {
             $this->tableData = $scoringReport->getTableData();
             $this->userRank = $scoringReport->getUserRank();
@@ -139,7 +139,6 @@ class ilCmiXapiScoringGUI
             $length = 5;
             return array_slice($this->tableData, $offset, $length);
         }
-        return [];
     }
 
     /**

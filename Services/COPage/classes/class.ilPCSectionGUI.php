@@ -116,8 +116,8 @@ class ilPCSectionGUI extends ilPageContentGUI
     */
     public static function _getCharacteristics($a_style_id)
     {
-        $chars = ilPCSectionGUI::_getStandardCharacteristics();
-
+        $std_chars = ilPCSectionGUI::_getStandardCharacteristics();
+        $chars = $std_chars;
         if ($a_style_id > 0 &&
             ilObject::_lookupType($a_style_id) == "sty") {
             include_once("./Services/Style/Content/classes/class.ilObjStyleSheet.php");
@@ -125,8 +125,8 @@ class ilPCSectionGUI extends ilPageContentGUI
             $chars = $style->getCharacteristics("section");
             $new_chars = array();
             foreach ($chars as $char) {
-                if ($chars[$char] != "") {	// keep lang vars for standard chars
-                    $new_chars[$char] = $chars[$char];
+                if (($std_chars[$char] ?? "") != "") {	// keep lang vars for standard chars
+                    $new_chars[$char] = $std_chars[$char];
                 } else {
                     $new_chars[$char] = $char;
                 }
@@ -239,7 +239,11 @@ class ilPCSectionGUI extends ilPageContentGUI
         // link input
         include_once 'Services/Form/classes/class.ilLinkInputGUI.php';
         $ac = new ilLinkInputGUI($this->lng->txt('cont_link'), 'link');
-        $ac->setAllowedLinkTypes(ilLinkInputGUI::BOTH);
+        if ($this->getPageConfig()->getEnableInternalLinks()) {
+            $ac->setAllowedLinkTypes(ilLinkInputGUI::BOTH);
+        } else {
+            $ac->setAllowedLinkTypes(ilLinkInputGUI::EXT);
+        }
         $ac->setRequired(false);
         $ac->setInfo($this->lng->txt("copg_sec_link_info"));
         $ac->setInternalLinkDefault(

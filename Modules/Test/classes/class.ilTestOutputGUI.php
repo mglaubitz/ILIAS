@@ -267,6 +267,12 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
     
     protected function showQuestionCmd()
     {
+        global $DIC;
+        $help = $DIC->help();
+        $help->setScreenIdComponent("tst");
+        $help->setScreenId("assessment");
+        $help->setSubScreenId("question");
+
         $_SESSION['tst_pass_finish'] = 0;
 
         $_SESSION["active_time_id"] = $this->object->startWorkingTime(
@@ -619,6 +625,16 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
                 return false;
             }
         }
+
+        /*
+            #21097 - exceed maximum passes
+            this is a battle of conditions; e.g. ilTestPlayerAbstractGUI::autosaveOnTimeLimitCmd forces saving of results.
+            However, if an admin has finished the pass in the meantime, a new pass should not be created.
+        */
+        if ($force && $this->isNrOfTriesReached()) {
+            $force = false;
+        }
+
         // save question solution
         if ($this->canSaveResult() || $force) {
             // but only if the ending time is not reached
@@ -655,7 +671,7 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
             }
         }
 
-        if ($this->saveResult == false || (!$questionOBJ->validateSolutionSubmit() && $questionOBJ->savePartial()) ) {
+        if ($this->saveResult == false || (!$questionOBJ->validateSolutionSubmit() && $questionOBJ->savePartial())) {
             $this->ctrl->setParameter($this, "save_error", "1");
             $_SESSION["previouspost"] = $_POST;
         }
@@ -678,7 +694,7 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
             }
             $this->testSequence->setQuestionChecked($questionId);
             $this->testSequence->saveToDb();
-        } else if ($this->object->isForceInstantFeedbackEnabled()) {
+        } elseif ($this->object->isForceInstantFeedbackEnabled()) {
             $this->testSequence->setQuestionChecked($questionId);
             $this->testSequence->saveToDb();
         }

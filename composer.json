@@ -5,17 +5,21 @@
 	"authors": [],
 	"config": {
 		"optimize-autoloader": true,
-		"vendor-dir": "./libs/composer/vendor"
+		"vendor-dir": "./libs/composer/vendor",
+		"allow-plugins": {
+			"simplesamlphp/composer-module-installer": true,
+			"cweagans/composer-patches": true
+		}
 	},
 	"scripts": {
 		"post-autoload-dump": [
-			"php setup/cli.php build-artifacts --yes"
+			"@php setup/cli.php build-artifacts --yes"
 		],
 		"post-install-cmd": [
-			"php libs/composer/rmdirs.php"
+			"@php libs/composer/rmdirs.php"
 		],
 		"post-update-cmd": [
-			"php libs/composer/rmdirs.php"
+			"@php libs/composer/rmdirs.php"
 		],
 		"test-php-all": [
 			"./libs/composer/vendor/bin/phpunit -c ./Services/PHPUnit/config/PhpUnitConfig.xml --colors=always --disallow-todo-tests"
@@ -37,7 +41,7 @@
 		"pimple/pimple" : "^3.0",
 		"symfony/yaml": "^3.4",
 		"imsglobal/lti": "^3.0.2",
-		"guzzlehttp/psr7": "^1.4",
+		"guzzlehttp/psr7": "1.8.5",
 		"psr/http-message": "^1.0",
 		"dflydev/fig-cookies": "^1.0",
 		"ralouphie/getallheaders": "^2.0",
@@ -49,7 +53,7 @@
 		"symfony/console" : "^4.2",
 		"slim/slim": "^3.11",
 		"ramsey/uuid": "^3.8",
-		"enshrined/svg-sanitize": "^0.13.0",
+		"enshrined/svg-sanitize": "^0.15.0",
 		"guzzlehttp/guzzle": "^6.3",
 		"simplesamlphp/simplesamlphp": "^1.18"
 	},

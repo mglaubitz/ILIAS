@@ -46,6 +46,8 @@ class assClozeGap
      * @var boolean
      */
     public $shuffle;
+
+    private $shuffler;
     
     private $gap_size = 0;
 
@@ -57,7 +59,7 @@ class assClozeGap
      */
     public function __construct($a_type)
     {
-        $this->type = $a_type;
+        $this->type = (int) $a_type;
         $this->items = array();
         $this->shuffle = true;
     }
@@ -74,6 +76,21 @@ class assClozeGap
     public function getType()
     {
         return $this->type;
+    }
+    
+    public function isTextGap() : bool
+    {
+        return $this->type == self::TYPE_TEXT;
+    }
+    
+    public function isSelectGap() : bool
+    {
+        return $this->type == self::TYPE_SELECT;
+    }
+    
+    public function isNumericGap() : bool
+    {
+        return $this->type == self::TYPE_NUMERIC;
     }
 
     /**
@@ -206,8 +223,6 @@ class assClozeGap
     /**
     * Sets the lower bound for a given item
     *
-    * Sets the lower bound for a given item
-    *
     * @param integer $order Order of the item
     * @param double $bound Lower bounds of the item
     * @access public
@@ -294,6 +309,33 @@ class assClozeGap
     {
         return $this->shuffle;
     }
+
+    /**
+     * @param ilArrayElementShuffler $shuffler
+     */
+    public function setShuffler(ilArrayElementShuffler $shuffler = null)
+    {
+        if ($shuffler == null) {
+            require_once 'Services/Randomization/classes/class.ilArrayElementShuffler.php';
+            $shuffler = new ilArrayElementShuffler();
+            $seed = $shuffler->buildRandomSeed();
+            $shuffler->setSeed($seed);
+        }
+        $this->shuffler = $shuffler;
+    }
+
+    /**
+     * @return ilArrayElementShuffler
+     */
+    public function getShuffler() : ilArrayElementShuffler
+    {
+        if ($this->shuffler == null) {
+            $this->setShuffler();
+        }
+        return $this->shuffler;
+    }
+
+
 
     /**
     * Returns the maximum width of the gap

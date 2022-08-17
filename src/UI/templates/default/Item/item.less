@@ -14,6 +14,10 @@
 		.btn-link, a {
 			font-size: inherit;
 			line-height: @line-height-base;
+			
+			&:focus-visible {
+				display: block;
+			}
 		}
 	}
 
@@ -41,6 +45,9 @@
 		font-size: @font-size-small;
 		color: @il-text-light-color;
 		overflow: hidden;
+		&:not(:empty):after {
+			content: ": "
+		}
 	}
 
 	.il-item-property-value {
@@ -54,6 +61,12 @@
 
 	.row .row > .col-md-6 {
 		margin-bottom: 6px;
+	}
+
+	// fix for link buttons not being on the same line
+	.btn-link {
+		vertical-align: baseline;
+		font-size: inherit;
 	}
 
 }

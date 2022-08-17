@@ -249,8 +249,7 @@ class ilTestCorrectionsGUI
         $this->populatePageTitleAndDescription($questionGUI);
 
         $this->DIC->ui()->mainTemplate()->setContent($tpl->get());
-        $this->DIC->ui()->mainTemplate()->addCss('Modules/Test/templates/default/ta.css');
-        
+
         $this->DIC->ui()->mainTemplate()->setCurrentBlock("ContentStyle");
         $stylesheet = ilObjStyleSheet::getContentStylePath(0);
         $this->DIC->ui()->mainTemplate()->setVariable("LOCATION_CONTENT_STYLESHEET", $stylesheet);
@@ -284,7 +283,6 @@ class ilTestCorrectionsGUI
         
         $this->populatePageTitleAndDescription($questionGUI);
         $this->DIC->ui()->mainTemplate()->setContent($tablesHtml);
-        $this->DIC->ui()->mainTemplate()->addCss('Modules/Test/templates/default/ta.css');
     }
     
     protected function addAnswerAsynch()
@@ -427,7 +425,12 @@ class ilTestCorrectionsGUI
     {
         $this->DIC->tabs()->clearTargets();
         $this->DIC->tabs()->clearSubTabs();
-        
+
+        $this->DIC->help()->setScreenIdComponent("tst");
+        $this->DIC->help()->setScreenId("scoringadjust");
+        $this->DIC->help()->setSubScreenId($activeTabId);
+
+
         $this->DIC->tabs()->setBackTarget(
             $this->DIC->language()->txt('back'),
             $this->DIC->ctrl()->getLinkTarget($this, 'showQuestionList')

@@ -194,6 +194,7 @@ export default class TinyWrapper {
         language: "en",
         height: "100%",
         plugins: "save,paste,lists",
+        smart_paste: false,
         save_onsavecallback: "saveParagraph",
         mode: "exact",
         elements: this.id,
@@ -439,11 +440,12 @@ export default class TinyWrapper {
       // backspace (8)
       if ([8].includes(ev.keyCode)) {
         wrapper.mergePrevious = (
-          currentRng.commonAncestorContainer.previousSibling === null &&
+          wrapper.isFirstNode(currentRng.commonAncestorContainer) &&
           currentRng.collapsed &&
           currentRng.startOffset === 0 &&
           currentRng.endOffset === 0
         );
+
         if (wrapper.mergePrevious) {
           const dom = tiny.dom;
           if (dom.select('ol,ul')) {    // do not allow to outdent first list element
@@ -1022,4 +1024,13 @@ export default class TinyWrapper {
     ed.selection.collapse(false);
   }
 
+  disable() {
+    const ed = this.tiny;
+    ed.getBody().setAttribute('contenteditable', false);
+  }
+
+  enable() {
+    const ed = this.tiny;
+    ed.getBody().setAttribute('contenteditable', true);
+  }
 }

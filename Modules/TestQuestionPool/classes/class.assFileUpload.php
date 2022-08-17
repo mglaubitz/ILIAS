@@ -984,7 +984,7 @@ class assFileUpload extends assQuestion implements ilObjQuestionScoringAdjustabl
     * @param integer $question_counter A reference to a question counter to count the questions of an imported question pool
     * @param array $import_mapping An array containing references to included ILIAS objects
     */
-    public function fromXML(&$item, &$questionpool_id, &$tst_id, &$tst_object, &$question_counter, &$import_mapping)
+    public function fromXML(&$item, &$questionpool_id, &$tst_id, &$tst_object, &$question_counter, &$import_mapping, array $solutionhints = [])
     {
         include_once "./Modules/TestQuestionPool/classes/import/qti12/class.assFileUploadImport.php";
         $import = new assFileUploadImport($this);
@@ -1126,7 +1126,8 @@ class assFileUpload extends assQuestion implements ilObjQuestionScoringAdjustabl
 		FROM tst_solutions, tst_active, qpl_questions 
 		WHERE tst_solutions.active_fi = tst_active.active_id 
 		AND tst_solutions.question_fi = qpl_questions.question_id 
-		AND tst_solutions.question_fi = %s AND tst_active.test_fi = %s";
+		AND tst_solutions.question_fi = %s AND tst_active.test_fi = %s 
+		AND tst_solutions.value1 is not null";
         $result = $ilDB->queryF(
             $query,
             array("integer", "integer"),

@@ -108,7 +108,8 @@ class ilMMSubitemFormGUI
             // ICON
             $icon = $f()->field()->file(new ilMMUploadHandlerGUI(), $txt('sub_icon'))
                         ->withByline($txt('sub_icon_byline'))
-                        ->withAcceptedMimeTypes([ilMimeTypeUtil::IMAGE__SVG_XML]);
+                        ->withAcceptedMimeTypes([ilMimeTypeUtil::IMAGE__SVG_XML])
+                        ->withMaxFileSize(ilMMUploadHandlerGUI::MAX_FILE_SIZE);
             if ($this->item_facade->getIconID() !== null) {
                 $icon = $icon->withValue([$this->item_facade->getIconID()]);
             }
@@ -133,22 +134,24 @@ class ilMMSubitemFormGUI
         $items[self::F_ACTIVE] = $active;
 
         // ROLE BASED VISIBILITY
-        $access                         = new ilObjMainMenuAccess();
-        $value_role_based_visibility    = NULL;
-        if($this->item_facade->hasRoleBasedVisibility() && !empty($this->item_facade->getGlobalRoleIDs())) {
-            $value_role_based_visibility[0] = $this->item_facade->getGlobalRoleIDs();
+        if($this->item_facade->supportsRoleBasedVisibility()) {
+            $access                         = new ilObjMainMenuAccess();
+            $value_role_based_visibility    = NULL;
+            if($this->item_facade->hasRoleBasedVisibility() && !empty($this->item_facade->getGlobalRoleIDs())) {
+                $value_role_based_visibility[0] = $this->item_facade->getGlobalRoleIDs();
+            }
+            $role_based_visibility = $f()->field()->optionalGroup(
+                [
+                    $f()->field()->multiSelect(
+                        $txt('sub_global_roles'),
+                        $access->getGlobalRoles()
+                    )->withRequired(true)
+                ],
+                $txt('sub_role_based_visibility'),
+                $txt('sub_role_based_visibility_byline')
+            )->withValue($value_role_based_visibility);
+            $items[self::F_ROLE_BASED_VISIBILITY] = $role_based_visibility;
         }
-        $role_based_visibility = $f()->field()->optionalGroup(
-            [
-                $f()->field()->multiSelect(
-                    $txt('sub_global_roles'),
-                    $access->getGlobalRoles()
-                )->withRequired(true)
-            ],
-            $txt('sub_role_based_visibility'),
-            $txt('sub_role_based_visibility_byline')
-        )->withValue($value_role_based_visibility);
-        $items[self::F_ROLE_BASED_VISIBILITY] = $role_based_visibility;
 
         // RETURN FORM
         if ($this->item_facade->isEmpty()) {

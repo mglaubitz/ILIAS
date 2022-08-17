@@ -790,6 +790,12 @@ export default class ParagraphUI {
           wrapper.switchToEnd();
         }
       }
+      
+      const ed = wrapper.tiny;
+      ed.shortcuts.add('meta+b', '', function() {parUI.cmdSpan('Strong');});
+      ed.shortcuts.add('meta+u', '', function() {parUI.cmdSpan('Important');});
+      ed.shortcuts.add('meta+i', '', function() {parUI.cmdSpan('Emph');});
+
     });
   }
 
@@ -889,6 +895,23 @@ export default class ParagraphUI {
 
 
     this.toolSlate.setContentFromComponent("Paragraph", "menu");
+    console.log("*** SHOW TOOLBAR");
+
+    let map = {};
+    map[ACTIONS.SELECTION_REMOVE_FORMAT] = () => ef.selectionRemoveFormat();
+    map[ACTIONS.SELECTION_KEYWORD] = () => ef.selectionKeyword();
+    map[ACTIONS.SELECTION_TEX] = () => ef.selectionTex();
+    map[ACTIONS.SELECTION_FN] = () => ef.selectionFn();
+    map[ACTIONS.SELECTION_ANCHOR] = () => ef.selectionAnchor();
+    map[ACTIONS.LIST_BULLET] = () => ef.listBullet();
+    map[ACTIONS.LIST_NUMBER] = () => ef.listNumber();
+    map[ACTIONS.LIST_OUTDENT] = () => ef.listOutdent();
+    map[ACTIONS.LIST_INDENT] = () => ef.listIndent();
+    map[ACTIONS.LINK_WIKI] = () => ef.linkWiki();
+    map[ACTIONS.LINK_INTERNAL] = () => ef.linkInternal();
+    map[ACTIONS.LINK_EXTERNAL] = () => ef.linkExternal();
+    map[ACTIONS.LINK_USER] = () => ef.linkUser();
+    map[PAGE_ACTIONS.COMPONENT_CANCEL] = () => action.page().editor().componentCancel();
 
     document.querySelectorAll("[data-copg-ed-type='par-action']").forEach(char_button => {
       const actionType = char_button.dataset.copgEdAction;
@@ -939,23 +962,8 @@ export default class ParagraphUI {
           break;
 
         default:
-          let map = {};
-          map[ACTIONS.SELECTION_REMOVE_FORMAT] = ef.selectionRemoveFormat();
-          map[ACTIONS.SELECTION_KEYWORD] = ef.selectionKeyword();
-          map[ACTIONS.SELECTION_TEX] = ef.selectionTex();
-          map[ACTIONS.SELECTION_FN] = ef.selectionFn();
-          map[ACTIONS.SELECTION_ANCHOR] = ef.selectionAnchor();
-          map[ACTIONS.LIST_BULLET] = ef.listBullet();
-          map[ACTIONS.LIST_NUMBER] = ef.listNumber();
-          map[ACTIONS.LIST_OUTDENT] = ef.listOutdent();
-          map[ACTIONS.LIST_INDENT] = ef.listIndent();
-          map[ACTIONS.LINK_WIKI] = ef.linkWiki();
-          map[ACTIONS.LINK_INTERNAL] = ef.linkInternal();
-          map[ACTIONS.LINK_EXTERNAL] = ef.linkExternal();
-          map[ACTIONS.LINK_USER] = ef.linkUser();
-          map[PAGE_ACTIONS.COMPONENT_CANCEL] = action.page().editor().componentCancel();
           char_button.addEventListener("click", (event) => {
-            dispatch.dispatch(map[actionType]);
+            dispatch.dispatch(map[actionType]());
           });
           break;
       }
@@ -1033,7 +1041,7 @@ export default class ParagraphUI {
   setSectionClass(pcid, characteristic) {
     const currentPar = document.querySelector("[data-copg-ed-type='pc-area'][data-pcid='" + pcid + "']");
     const parentComp = currentPar.parentNode.closest("[data-copg-ed-type='pc-area']");
-    if (parentComp && parentComp.dataset.cname === "Section") {
+    if (parentComp && parentComp.dataset.cname === "Section" && characteristic !== "") {
       const contentDiv = parentComp.querySelector("div.ilCOPageSection,a.ilCOPageSection");
       contentDiv.className = "ilc_section_" + characteristic + " ilCOPageSection";
     }
@@ -1063,6 +1071,8 @@ export default class ParagraphUI {
   setSectionClassSelector(i) {
     if (i === "") {
       i = il.Language.txt("cont_no_block");
+    } else {
+      i = document.querySelector("[data-copg-ed-par-class='" + i + "'] div.ilc_section_" + i).innerHTML;
     }
     const fc = document.querySelector(".ilSectionClassSelector .dropdown button");
     if (fc) {
@@ -1177,6 +1187,44 @@ export default class ParagraphUI {
 
   clearError() {
     this.pageModifier.clearError();
+  }
+
+  disableButtons() {
+    document.querySelectorAll("#iltinymenu button").forEach(el => {
+      el.disabled = true;
+    });
+  }
+
+  enableButtons() {
+    document.querySelectorAll("#iltinymenu button").forEach(el => {
+      el.disabled = false;
+    });
+  }
+
+  showLoader() {
+    const tl = document.querySelector("[data-copg-ed-type='top-loader']");
+    if (tl) {
+      tl.style.display = '';
+    }
+  }
+
+  hideLoader() {
+    const tl = document.querySelector("[data-copg-ed-type='top-loader']");
+    if (tl) {
+      tl.style.display = 'none';
+    }
+  }
+
+  disableEditing() {
+    this.disableButtons();
+    this.tinyWrapper.disable();
+    this.showLoader();
+  }
+
+  enableEditing() {
+    this.enableButtons();
+    this.tinyWrapper.enable();
+    this.hideLoader();
   }
 
 }

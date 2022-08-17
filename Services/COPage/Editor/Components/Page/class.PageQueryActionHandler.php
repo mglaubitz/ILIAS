@@ -105,6 +105,7 @@ class PageQueryActionHandler implements Server\QueryActionHandler
         $o->multiActions = $this->getMultiActions();
         $o->pasteMessage = $this->getPasteMessage();
         $o->errorMessage = $this->getErrorMessage();
+        $o->errorModalMessage = $this->getErrorModalMessage();
         $o->config = $this->getConfig();
         $o->components = $this->getComponentsEditorUI();
         $o->pcModel = $this->getPCModel();
@@ -256,6 +257,7 @@ class PageQueryActionHandler implements Server\QueryActionHandler
             ]
         );
         $tpl->setVariable("SWITCH", $html);
+        $tpl->setVariable("SRC_LOADER", \ilUtil::getImagePath("loader.svg"));
 
         return $tpl->get();
     }
@@ -502,6 +504,16 @@ class PageQueryActionHandler implements Server\QueryActionHandler
     }
 
     /**
+     * error message in modal
+     */
+    protected function getErrorModalMessage() : string
+    {
+        $html = $this->ui_wrapper->getRenderedModalFailureBox();
+
+        return $html;
+    }
+
+    /**
      * Format selection
      */
     protected function getFormatSelection()
@@ -606,6 +618,7 @@ class PageQueryActionHandler implements Server\QueryActionHandler
         foreach (\ilCOPagePCDef::getPCDefinitions() as $def) {
             $pcdef["types"][$def["name"]] = $def["pc_type"];
             $pcdef["names"][$def["pc_type"]] = $def["name"];
+            $pcdef["txt"][$def["pc_type"]] = $this->lng->txt("cont_" . "pc_" . $def["pc_type"]);
         }
         return $pcdef;
     }

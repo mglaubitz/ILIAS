@@ -65,10 +65,17 @@ class StreamInfoResolver extends AbstractInfoResolver implements InfoResolver
         }
         if (class_exists('finfo')) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $this->mime_type = finfo_buffer($finfo, $this->file_stream->getContents());
+            //We only need the first few bytes to determine the mime-type this helps to reduce RAM-Usage
+            $this->mime_type = finfo_buffer($finfo, $this->file_stream->read(255));
+            if ($this->file_stream->isSeekable()) {
+                $this->file_stream->rewind();
+            }
+            //All MS-Types are 'application/zip' we need to look at the extension to determine the type.
+            if ($this->mime_type === 'application/zip' && $this->suffix !== 'zip') {
+                $this->mime_type = $this->getMSFileTypeFromSuffix();
+            }
             return;
         }
-
     }
 
     protected function initSize() : void
@@ -77,10 +84,18 @@ class StreamInfoResolver extends AbstractInfoResolver implements InfoResolver
         try {
             $this->size = $this->file_stream->getSize();
         } catch (\Throwable $t) {
-            if (function_exists('mb_strlen')) {
-                $this->size = mb_strlen($this->file_stream->getContents(), '8bit');
-            } else {
-                $this->size = strlen($this->file_stream->getContents());
+            $mb_strlen_exists = function_exists('mb_strlen');
+            //We only read one MB at a time as this radically reduces RAM-Usage
+            while ($content = $this->file_stream->read(1048576)) {
+                if ($mb_strlen_exists) {
+                    $this->size += mb_strlen($content, '8bit');
+                } else {
+                    $this->size += strlen($content);
+                }
+            }
+            
+            if ($this->file_stream->isSeekable()) {
+                $this->file_stream->rewind();
             }
         }
     }
@@ -94,7 +109,7 @@ class StreamInfoResolver extends AbstractInfoResolver implements InfoResolver
     protected function initFileName() : void
     {
         $this->file_name = basename($this->path);
-        if ($this->file_name === 'memory') { // in case the stream is ofString
+        if ($this->file_name === 'memory' || $this->file_name === 'input') { // in case the stream is ofString or of php://input
             $this->file_name = $this->getRevisionTitle();
         }
     }
@@ -122,5 +137,15 @@ class StreamInfoResolver extends AbstractInfoResolver implements InfoResolver
     public function getSize() : int
     {
         return $this->size;
+    }
+    
+    protected function getMSFileTypeFromSuffix() : string
+    {
+        $mime_types_array = \ilMimeTypeUtil::getExt2MimeMap();
+        $suffix_with_dot = '.' . $this->getSuffix();
+        if (array_key_exists($suffix_with_dot, $mime_types_array)) {
+            return $mime_types_array[$suffix_with_dot];
+        }
+        return 'application/zip';
     }
 }

@@ -3,6 +3,7 @@ var ClozeGlobals = {
 	active_gap:                   -1,
 	cursor_pos:                   '',
 	gap_count:                    0,
+	scrollable_page_element:      'il-layout-page-content',
 	form_class:                   '#form_assclozetest',
 	form_class_adjustment:        '#form_adjustment',
 	form_footer_class:            '.ilFormFooter',
@@ -53,6 +54,19 @@ var ClozeGapBuilder = (function () {
 		if (ClozeSettings.gaps_php === null) {
 			ClozeSettings.gaps_php = [];
 		}
+		
+		ClozeSettings.gaps_php[0].forEach(
+			(gap) => {
+				if (gap.type === 'text' || gap.type === 'select') {
+					gap.values.forEach(
+						(value) => {
+							value.answer = value.answer.replace('&#123;','{');
+							value.answer = value.answer.replace('&#125;','}');
+						}
+					);
+				}
+			}
+		);
 
 		if (ClozeSettings.gaps_combination === null) {
 			ClozeSettings.gaps_combination = [];
@@ -151,14 +165,17 @@ var ClozeGapBuilder = (function () {
 	};
 
 	pro.getCursorPositionTiny = function (editor) {
+		var scrollableElement = document.getElementsByClassName(ClozeGlobals.scrollable_page_element)[0];
 		var bm = editor.selection.getBookmark(0);
 		var selector = '[data-mce-type=bookmark]';
 		var bmElements = editor.dom.select(selector);
 		editor.selection.select(bmElements[0]);
 		editor.selection.collapse();
 		var elementID = '######cursor######';
+		var windowPosition = scrollableElement.scrollTop;
 		var positionString = '<span id="' + elementID + '"></span>';
 		editor.selection.setContent(positionString);
+		scrollableElement.scrollTop = windowPosition;
 		var content = editor.getContent({format: 'html'});
 		var index = content.indexOf(positionString);
 		editor.dom.remove(elementID, false);

@@ -1425,7 +1425,6 @@ cntr#:#cntr_view_sessions#:#სესიების ხედვა
 cntr#:#cntr_view_simple#:#მარტივი ხედვა
 cntr#:#container_import_zip_file_invalid#:#ატვირთული ფაილი არ არის სწორი ილიასის საექსპორტო ფაილი. დირექტორიის სტრუქტურის ასატვირთათ გთხოვთ გამოიყენოთ ფაილის ობიექტი
 cntr#:#edit_questions#:#კითხვების რედაქტირება
-common#:#3rd_party_software#:#მესამე მხარის პროგრამა
 common#:#absolute_path#:#აბსოლუტური მდებარეობა
 common#:#accept_usr_agreement#:#მივიღოთ მომხმარებლის ხელშეკრულება?
 common#:#access#:#შესვლა
@@ -2041,7 +2040,6 @@ common#:#filter_users_without_disk_usage#:#მხოლოდ მომხმა
 common#:#first#:#პირველი
 common#:#firstname#:#სახელი
 common#:#flatview#:#განმარტების დამალვა
-common#:#fm_start#:#Open With File Manager
 common#:#fold#:#ფოლდერი
 common#:#fold_add#:#ფოლდერის დამატება
 common#:#fold_added#:#ფოლდერი დამატებულია
@@ -3266,7 +3264,6 @@ common#:#time_limit_from#:#საიდან ( დროის შეზღუ�
 common#:#time_limit_message#:#შეტყობინება ( დროის შეზღუდვა)
 common#:#time_limit_no_users_selected#:#გთხოვთ მონიშნოთ მომხმარებელი
 common#:#time_limit_not_valid#:#პერიოდი არ არის სწორი
-common#:#time_limit_owner#:#მფლობელი ( დროის შეზღუდვა)
 common#:#time_limit_reached#:#თქვენი ანგარიში არა არის აქტიური
 common#:#time_limit_unlimited#:#შეუზღუდავი ( დროის შეზღუდვა)
 common#:#time_limit_until#:#სადამდე ( დროის შეზღუდვა)
@@ -5472,13 +5469,6 @@ file#:#file_new_version#:#ახალი ვერსიის შექმნ�
 file#:#file_new_version_info#:#ახალი ფაილის ვერსიის შექმნა.ძველი ვერსიები არ იქნება შეცვლილი
 file#:#file_uploaded_by#:#Uploaded by
 file#:#replace_file_info#:#ყველა წინა ვერსია წაიშლება
-fm#:#fm_settings_active#:#Enable File Manager
-fm#:#fm_settings_active_info#:#Users can open categories, courses, groups and folders using the "Open With File Manager" action in the repository.
-fm#:#fm_settings_filesize#:#Maximum Upload File Size
-fm#:#fm_settings_filesize_info#:#Enter the maximum allowed filesize for uploaded files in mebibyte.
-fm#:#fm_settings_local#:#Show Local Filesystem
-fm#:#fm_settings_local_info#:#If enabled, the file manager starts with two frames, one shows the local filesystem, the other contains the view on the ILIAS repository. If disabled, only the ILIAS repository is shown.
-fm#:#fm_settings_tab#:#File Manager
 fold#:#fold_copy#:#Copy Folder
 fold#:#fold_import#:#ფოლდერის იმპორტი
 form#:#form_alphabet_all#:#ყველა
@@ -15837,8 +15827,6 @@ prg#:#modal_categories_title#:#Category to be monitored###07 02 2020 new variabl
 prg#:#category#:#Category###07 02 2020 new variable
 common#:#obj_prgr#:#Link to Study Programme###07 02 2020 new variable
 common#:#obj_prgrs#:#Links to Study Programmes###07 02 2020 new variable
-prg#:#prgr_new#:#Create Study Programme Link###07 02 2020 new variable
-prg#:#prgr_edit_info#:#Please choose one Study Programme for creating a new link.###07 02 2020 new variable
 prg#:#prgr_may_not_create_circular_reference#:#This Study Programme may not be linked here since the parent object is alredy linked within the target.###07 02 2020 new variable
 prg#:#prg_validity_of_qualification_limit#:#Qualification Expiry###07 02 2020 new variable
 prg#:#prg_validity_of_qualification_restart#:#Restart###07 02 2020 new variable
@@ -16622,3 +16610,66 @@ cmix#:#conf_mastery_score_info#:#This value is passed to the cmi5 learning modul
 cmix#:#conf_launch_mode_normal_info#:#Data related to the learning progress should be recorded.###03 11 2021 new variable
 cmix#:#conf_launch_mode_browse_info#:#This option should provide a user experience that allows the user to "look around" without judgement.###03 11 2021 new variable
 cmix#:#conf_launch_mode_review_info#:#This option should provide a user experience that allows the user to "revisit / review" already completed material.###03 11 2021 new variable
+common#:#withdrawal_sure_account_deletion_no_consent_yet#:#Are you sure you do not want to accept the terms of service? Your user account will be irrevocably deleted.###15 12 2021 new variable
+common#:#withdrawal_sure_account_no_consent_yet#:#Are you sure you do not want to accept the terms of service?###15 12 2021 new variable
+common#:#hist_lm_pg_update#:#Page changed.###15 12 2021 new variable
+common#:#actions_for#:#Actions for %s###15 12 2021 new variable
+content#:#cont_lpe_saml_login#:#SAML Login###26 01 2022 new variable
+forum#:#file_upload_option_allow_info#:#Files can be attached to posts in all forums.###26 01 2022 new variable
+assessment#:#finish_pass_for_user_in_processing_time#:#WARNING: the processing time for this user is not over yet! You should only end the test run if there is a compelling reason (e.g. exclusion from the test).###09 03 2022 new variable
+assessment#:#finish_pass_for_all_users_in_processing_time#:#You cannot finish the passes of all users together, because for at least one user the processing time is not over yet.###09 03 2022 new variable
+common#:#refuse_tos_acceptance#:#Refuse to Accept Terms of Service###09 03 2022 new variable
+content#:#cont_pc_media#:#Image/Media###09 03 2022 new variable
+dateplaner#:#cal_change_calendar_view#:#Change Calendar View###09 03 2022 new variable
+common#:#obj_chtr_duplicate#:#Copy Chat Room###09 03 2022 new variable
+assessment#:#err_division#:#This value has to be smaller than the maximum range.###09 03 2022 new variable
+assessment#:#err_divider_too_big#:#The divider of one of the variables in this question is too big.###09 03 2022 new variable
+common#:#prgr_new#:#Create Study Programme Link###09 03 2022 new variable
+common#:#prgr_edit_info#:#Please choose one Study Programme for creating a new link.###09 03 2022 new variable
+file#:#migrated#:#Status###09 03 2022 new variable
+exc#:#exc_fullscreen#:#Fullscreen###09 03 2022 new variable
+rating#:#rating_avg_rating#:#Average Rating###09 03 2022 new variable
+rating#:#rating_personal_rating#:#Your Rating###09 03 2022 new variable
+rating#:#rating_rate_x_of_5#:#Rate with %s of 5 stars###09 03 2022 new variable
+rating#:#rating_open_dialog#:#Open rating dialog###09 03 2022 new variable
+tagging#:#tagging_no_obj_for_tag#:#No Resources tagged with %s.###09 03 2022 new variable
+rep#:#rep_favourites#:#Favourites###09 03 2022 new variable
+rep#:#rep_favourites_info#:#Users can mark single repository items as favourites. Favourites lists can be activated and configured in the dashboard and menu settings.###09 03 2022 new variable
+mail#:#mail_no_subject#:#No Subject available###27 04 2022 new variable
+buddysystem#:#buddy_bs_state_linked_p#:#Linked###27 04 2022 new variable
+buddysystem#:#buddy_bs_state_unlinked#:#Unlinked###27 04 2022 new variable
+buddysystem#:#buddy_bs_state_unlinked_p#:#Unlinked###27 04 2022 new variable
+buddysystem#:#buddy_bs_state_requested_filter_a#:#Waiting for Reaction###27 04 2022 new variable
+buddysystem#:#buddy_bs_state_requested_filter_p#:#Action Required###27 04 2022 new variable
+ui#:#ui_tag_required#:#Please insert at least one tag.###27 04 2022 new variable
+assessment#:#backtocallingpage#:#Back to the question page###29 06 2022 new variable
+assessment#:#backtocallingpool#:#Back to the question pool###29 06 2022 new variable
+assessment#:#tst_btn_reset_pool_sync#:#Edit/Cancel Synchronisation###29 06 2022 new variable
+common#:#certificates#:#Certificates###29 06 2022 new variable
+mail#:#mail_is_read#:#gelesen###29 06 2022 new variable
+mail#:#mail_is_unread#:#ungelesen###29 06 2022 new variable
+assessment#:#tst_man_scoring_only_answered#:#Only answered###29 06 2022 new variable
+common#:#report_accessibility_link_mailto#:#Reported%20Link:###29 06 2022 new variable
+glo#:#glo_please_select_other_glo#:#Please select another glossary.###29 06 2022 new variable
+prtf#:#prtf_copy_pg#:#Copy Page###29 06 2022 new variable
+prtf#:#prtf_copy_blog_pg#:#Copy Blog Page###29 06 2022 new variable
+assessment#:#question_is_part_of_running_test#:#Question is part of a running test and may not be edited.###29 06 2022 new variable
+copg#:#copg_error_occured_modal#:#An error occured while processing the page. Hit "Reload Page" to return to the previously saved state.###29 06 2022 new variable
+copg#:#copg_reload_page#:#Reload Page###29 06 2022 new variable
+assessment#:#tst_opening_period#:#Access times###29 07 2022 new variable
+assessment#:#tst_opening_period_desc#:#Interval in which Users have access to the test. <b>Important</b>: Do <b>not</b> use this option for e-exams/distance exams. Instead, use the function "Limit processing time", see below. Only then will the test be ended on the server side and each participant's last entry automatically saved as an authorised answer.###29 07 2022 new variable
+content#:#cont_credit_mode_info#:#The Learning Module is informed via cmi.core.credit whether the achieved Performance (pass/fail and score) is desired (credit) or not desired (no-credit) for the Assessment. It is the responsibility of the Learning Module to interpret this Instruction adequately.###29 07 2022 new variable
+forum#:#frm_noti_obj_crs#:#course###29 07 2022 new variable
+forum#:#frm_noti_obj_grp#:#group###29 07 2022 new variable
+sess#:#sess_warn_sess_type_changed#:#Do you really want to change the session type? All permission settings will be reset.###29 07 2022 new variable
+sess#:#sess_info_new_sess_type#:#New Session Type###29 07 2022 new variable
+sess#:#il_sess_status_open#:#Open Session###29 07 2022 new variable
+sess#:#sess_change_type#:#Change Session Type###29 07 2022 new variable
+lti#:#conf_privacy_ident_il_uuid_SHA256#:#Hash combined with a unique ILIAS platform id formatted as an E-Mail address###29 07 2022 new variable
+lti#:#conf_privacy_ident_il_uuid_SHA256_info#:#This is identical to each call, but does not permit any direct conclusions about the ILIAS user.###29 07 2022 new variable
+cmix#:#conf_privacy_ident_il_uuid_SHA256#:#Hash combined with a unique ILIAS platform id formatted as an E-Mail address###29 07 2022 new variable
+cmix#:#conf_privacy_ident_il_uuid_SHA256_info#:#This is identical to each call, but does not permit any direct conclusions about the ILIAS user.###29 07 2022 new variable
+assessment#:#qst_use_nested_answers#:#Nested answers###29 07 2022 new variable
+assessment#:#qst_nested_nested_answers_on#:#Use indents in anwers###29 07 2022 new variable
+assessment#:#qst_nested_nested_answers_off#:#No indents, just order###29 07 2022 new variable
+assessment#:#tab_nest_answers#:#Nesting###29 07 2022 new variable

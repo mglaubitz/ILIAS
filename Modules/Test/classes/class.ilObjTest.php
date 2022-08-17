@@ -2127,57 +2127,7 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
     {
         return (strlen($this->_customStyle)) ? $this->_customStyle : null;
     }
-    
-    /**
-    * Return the available custom styles
-    *
-    * @return array An array of strings containing the available custom styles
-    * @access public
-    * @see $_customStyle
-    */
-    public function getCustomStyles()
-    {
-        $css_path = ilUtil::getStyleSheetLocation("filesystem", "ta.css", "Modules/Test");
-        $css_path = str_replace("ta.css", "customstyles", $css_path) . "/";
-        $customstyles = array();
-        if (is_dir($css_path)) {
-            $results = array();
-            include_once "./Services/Utilities/classes/class.ilFileUtils.php";
-            ilFileUtils::recursive_dirscan($css_path, $results);
-            if (is_array($results["file"])) {
-                foreach ($results["file"] as $filename) {
-                    if (strpos($filename, ".css")) {
-                        array_push($customstyles, $filename);
-                    }
-                }
-            }
-        }
-        return $customstyles;
-    }
-    
-    /**
-    * get full style sheet file name (path inclusive) of current user
-    *
-    * @param $mode string Output mode of the style sheet ("output" or "filesystem"). !"filesystem" generates the ILIAS
-    * version number as attribute to force the reload of the style sheet in a different ILIAS version
-    * @access	public
-    */
-    public function getTestStyleLocation($mode = "output")
-    {
-        if (strlen($this->getCustomStyle())) {
-            $default = ilUtil::getStyleSheetLocation("filesystem", "ta.css", "Modules/Test");
-            $custom = str_replace("ta.css", "customstyles/" . $this->getCustomStyle(), $default);
-            if (file_exists($custom)) {
-                $custom = ilUtil::getStyleSheetLocation($mode, "ta.css", "Modules/Test");
-                $custom = str_replace("ta.css", "customstyles/" . $this->getCustomStyle(), $custom);
-                return $custom;
-            } else {
-                return ilUtil::getStyleSheetLocation($mode, "ta.css", "Modules/Test");
-            }
-        } else {
-            return ilUtil::getStyleSheetLocation($mode, "ta.css", "Modules/Test");
-        }
-    }
+  
 
     /**
     * Sets whether the final statement should be shown or not
@@ -4267,12 +4217,12 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
         $found["test"]["result_pass"] = $results['pass'];
         $found['test']['result_tstamp'] = $results['tstamp'];
         $found['test']['obligations_answered'] = $results['obligations_answered'];
-        
-        if ((!$total_reached_points) or (!$total_max_points)) {
+
+        if ((!$found['pass']['total_reached_points']) or (!$found['pass']['total_max_points'])) {
             $percentage = 0.0;
         } else {
-            $percentage = ($total_reached_points / $total_max_points) * 100.0;
-            
+            $percentage = ($found['pass']['total_reached_points'] / $found['pass']['total_max_points']) * 100.0;
+
             if ($percentage < 0) {
                 $percentage = 0.0;
             }
@@ -7206,6 +7156,7 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
         $newObj->setCharSelectorDefinition($this->getCharSelectorDefinition());
         $newObj->setSkillServiceEnabled($this->isSkillServiceEnabled());
         $newObj->setResultFilterTaxIds($this->getResultFilterTaxIds());
+        $newObj->setPassDeletionAllowed($this->isPassDeletionAllowed());
         $newObj->setFollowupQuestionAnswerFixationEnabled($this->isFollowupQuestionAnswerFixationEnabled());
         $newObj->setInstantFeedbackAnswerFixationEnabled($this->isInstantFeedbackAnswerFixationEnabled());
         $newObj->setForceInstantFeedbackEnabled($this->isForceInstantFeedbackEnabled());
@@ -8001,7 +7952,8 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
             "max_points" => $this->lng->txt("tst_maximum_points"),
             "percent_value" => $this->lng->txt("tst_percent_solved"),
             "mark" => $this->lng->txt("tst_mark"),
-            "ects" => $this->lng->txt("ects_grade")
+            "ects" => $this->lng->txt("ects_grade"),
+            "passed" => $this->lng->txt("tst_mark_passed"),
         );
         $results[] = $row;
         if (count($participants)) {
@@ -8050,7 +8002,8 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
                     "max_points" => $max_points,
                     "percent_value" => $percentvalue,
                     "mark" => $mark,
-                    "ects" => $ects_mark
+                    "ects" => $ects_mark,
+                    "passed" => $user_rec['passed'] ? '1' : '0',
                 );
                 $results[] = $prepareForCSV ? $this->processCSVRow($row, true) : $row;
             }
@@ -10006,9 +9959,6 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
         $printbody->setVariable("TITLE", ilUtil::prepareFormOutput($this->getTitle()));
         $printbody->setVariable("ADM_CONTENT", $content);
         $printbody->setCurrentBlock("css_file");
-        $printbody->setVariable("CSS_FILE", $this->getTestStyleLocation("filesystem"));
-        $printbody->parseCurrentBlock();
-        $printbody->setCurrentBlock("css_file");
         $printbody->setVariable("CSS_FILE", ilUtil::getStyleSheetLocation("filesystem", "delos.css"));
         $printbody->parseCurrentBlock();
         $printoutput = $printbody->get();
@@ -10334,7 +10284,8 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
                             "question_id" => $question->getId(),
                             "question_title" => $question->getTitle(),
                             "reached_points" => $reached_points,
-                            "max_points" => $max_points
+                            "max_points" => $max_points,
+                            "passed" => $user_rec['passed'] ? '1' : '0',
                         );
                         $results[] = $row;
                     }
